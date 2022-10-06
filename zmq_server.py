@@ -92,7 +92,7 @@ def capture_3D(site, case_path, case_number, server_no, master_ID, sync_par, syn
     
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
     time.sleep(2)
-    os.system("rsync -av {source} vigir@192.168.0.21:~/Software/Data/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
+    os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
 
     process_pass = process.wait()
     
@@ -159,7 +159,7 @@ while True:
         site = message[1]
         case_number = message[2]
         site_path = os.path.join(base_path, site)
-        os.system("rsync -av {source} ~/Software/Data/".format(source = site_path + "/" + "Animal_" + str(case_number) + "_nano_" + nano_ID + '.txt'))
+        os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = site_path + "/" + "Animal_" + str(case_number) + "_nano_" + nano_ID + '.txt'))
         socket.send_string("Done")
         message = socket.recv()
         message = message.decode("utf-8")
@@ -169,7 +169,7 @@ while True:
         site_path = os.path.join(base_path, site)
         files = os.listdir(site_path)
         for obj in files:
-            os.system("rsync -av --remove-source-files {source} ~/Software/Data/".format(source = site_path + "/" + str(obj)))
+            os.system("rsync -av --remove-source-files {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = site_path + "/" + str(obj)))
         socket.send_string("Done")
         message = socket.recv()
         message = message.decode("utf-8")
