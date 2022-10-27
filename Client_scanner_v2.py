@@ -167,7 +167,8 @@ def main():
 
             in_use_cameras = [1,2,3,4,5,6]
             default_master = "11"
-            change_camera = input(color.GREEN + "In use cameras: " + str(in_use_cameras) + " The master camera:" + default_master + "/ if you want to change the default cameras: type CHANGE, otherwise press ENTER!" + color.END)
+            Synce_option = True
+            change_camera = input(color.GREEN + "In use cameras: " + str(in_use_cameras) + ", Syncing Mode: " + str(Synce_option) + " The master camera:" + default_master + "/ if you want to change the default cameras: type CHANGE, otherwise press ENTER!" + color.END)
 
             if change_camera == "CHANGE":
                 camera_order_ok = False
@@ -183,6 +184,11 @@ def main():
                                 # print("##############")
                                 in_use_cameras[i] = int(cam_in)
                 default_master = input(color.GREEN + "Please insert the master camera ID:" + color.END)
+                Synce_option = input(color.GREEN + "Please insert the syncing mode (1/0):" + color.END)
+                if Synce_option == 1:
+                    Synce_option = True
+                else:
+                    Synce_option = False
                             
             camera_choose = []
             for i in range(10):
@@ -247,7 +253,7 @@ def main():
                         break
                     else:
                         #msg = "c" + " " + site + " " + str(case_number)
-                        msg = ["c", site, str(case_number), default_master]
+                        msg = ["c", site, str(case_number), default_master, Synce_option]
                         print(msg)
                         if server1_message == "server 11 Ready":
                             socket1.send_string(json.dumps(msg))
@@ -439,7 +445,7 @@ def main():
 
 
 
-                        msg = ["c", site, str(case_number), default_master]
+                        msg = ["c", site, str(case_number), default_master, Synce_option]
                         msg = json.dumps(msg)
 
                         if server1_message == "server 11 Ready":
