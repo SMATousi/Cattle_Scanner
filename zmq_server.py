@@ -32,9 +32,9 @@ socket_s.setsockopt(zmq.SUBSCRIBE, b'')
 
 go_par = True
 
-sync_par = False
+#sync_par = False
 
-sync_delay = False
+sync_delay = True
 
 base_path = "/home/vigir/Images/"
 
@@ -139,6 +139,7 @@ while True:
         site = message[1]
         case_number = message[2]
         master_ID = message[3]
+        sync_par = message[4]
         site_path = os.path.join(base_path, site)
         #os.makedirs(site_path, exist_ok = True)
         os.makedirs(site_path, exist_ok = True)
