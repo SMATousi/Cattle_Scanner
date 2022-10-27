@@ -689,6 +689,7 @@ def main():
 
 
 
+<<<<<<< HEAD
         elif mode_char == 'w':
             while True:
 
@@ -854,6 +855,180 @@ def main():
                 server5_message = server5_message.decode("utf-8")
                 print(server5_message)
                 socket5.send_string("")
+||||||| merged common ancestors
+=======
+        elif mode_char == 'w':
+            while True:
+
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
+                server2_message = socket2.recv()
+                server2_message = server2_message.decode("utf-8")
+                server3_message = socket3.recv()
+                server3_message = server3_message.decode("utf-8")
+                server4_message = socket4.recv()
+                server4_message = server4_message.decode("utf-8")
+                server5_message = socket5.recv()
+                server5_message = server5_message.decode("utf-8")
+                server6_message = socket6.recv()
+                server6_message = server6_message.decode("utf-8")
+                server7_message = socket7.recv()
+                server7_message = server7_message.decode("utf-8")
+                server8_message = socket8.recv()
+                server8_message = server8_message.decode("utf-8")
+                server9_message = socket9.recv()
+                server9_message = server9_message.decode("utf-8")
+                server10_message = socket10.recv()
+                server10_message = server10_message.decode("utf-8")
+
+                site = input(color.GREEN + "For return insert: r, Otherwise press ENTER to start warming up:" + color.END)
+                if site == "r":
+                    msg = ["r"]
+                    socket_p.send_string(json.dumps(msg))
+                    socket1.send_string(json.dumps(msg))
+                    socket2.send_string(json.dumps(msg))
+                    socket3.send_string(json.dumps(msg))
+                    socket4.send_string(json.dumps(msg))
+                    socket5.send_string(json.dumps(msg))
+                    socket6.send_string(json.dumps(msg))
+                    socket7.send_string(json.dumps(msg))
+                    socket8.send_string(json.dumps(msg))
+                    socket9.send_string(json.dumps(msg))
+                    socket10.send_string(json.dumps(msg))
+                    break
+                
+                print("Warm up mode")
+
+                msg = ["w"]
+                socket_p.send_string(json.dumps(msg))
+                socket1.send_string(json.dumps(msg))
+                socket2.send_string(json.dumps(msg))
+                socket3.send_string(json.dumps(msg))
+                socket4.send_string(json.dumps(msg))
+                socket5.send_string(json.dumps(msg))
+                socket6.send_string(json.dumps(msg))
+                socket7.send_string(json.dumps(msg))
+                socket8.send_string(json.dumps(msg))
+                socket9.send_string(json.dumps(msg))
+                socket10.send_string(json.dumps(msg))
+
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
+                print(server1_message)
+                socket1.send_string("")
+
+                server2_message = socket2.recv()
+                server2_message = server2_message.decode("utf-8")
+                print(server2_message)
+                socket2.send_string("")
+
+                server3_message = socket3.recv() 
+                server3_message = server3_message.decode("utf-8")
+                print(server3_message)
+                socket3.send_string("")
+
+                server4_message = socket4.recv() 
+                server4_message = server4_message.decode("utf-8")
+                print(server4_message)
+                socket4.send_string("")
+
+                server5_message = socket5.recv() 
+                server5_message = server5_message.decode("utf-8")
+                print(server5_message)
+                socket5.send_string("")
+
+                server6_message = socket6.recv() 
+                server6_message = server6_message.decode("utf-8")
+                print(server6_message)
+                socket6.send_string("")
+>>>>>>> 08486542ef56c5441bbaf5131cc41812132b5c29
+
+<<<<<<< HEAD
+                server6_message = socket6.recv() 
+                server6_message = server6_message.decode("utf-8")
+                print(server6_message)
+                socket6.send_string("")
+
+                server7_message = socket7.recv() 
+                server7_message = server7_message.decode("utf-8")
+                print(server7_message)
+                socket7.send_string("")
+
+                server8_message = socket8.recv() 
+                server8_message = server8_message.decode("utf-8")
+                print(server8_message)
+                socket8.send_string("")
+
+                server9_message = socket9.recv() 
+                server9_message = server9_message.decode("utf-8")
+                print(server9_message)
+                socket9.send_string("")
+
+                server10_message = socket10.recv() 
+                server10_message = server10_message.decode("utf-8")
+                print(server10_message)
+                socket10.send_string("")
+||||||| merged common ancestors
+=======
+                server7_message = socket7.recv() 
+                server7_message = server7_message.decode("utf-8")
+                print(server7_message)
+                socket7.send_string("")
+
+                server8_message = socket8.recv() 
+                server8_message = server8_message.decode("utf-8")
+                print(server8_message)
+                socket8.send_string("")
+
+                server9_message = socket9.recv() 
+                server9_message = server9_message.decode("utf-8")
+                print(server9_message)
+                socket9.send_string("")
+
+                server10_message = socket10.recv() 
+                server10_message = server10_message.decode("utf-8")
+                print(server10_message)
+                socket10.send_string("")
+
+                site = input(color.RED + "NOW WARMING UP...................To end the warming up process: press ENTER" + color.END)
+
+                msg = ["wk"]
+                socket_p.send_string(json.dumps(msg))
+                socket1.send_string(json.dumps(msg))
+                socket2.send_string(json.dumps(msg))
+                socket3.send_string(json.dumps(msg))
+                socket4.send_string(json.dumps(msg))
+                socket5.send_string(json.dumps(msg))
+                socket6.send_string(json.dumps(msg))
+                socket7.send_string(json.dumps(msg))
+                socket8.send_string(json.dumps(msg))
+                socket9.send_string(json.dumps(msg))
+                socket10.send_string(json.dumps(msg))
+
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
+                print(server1_message)
+                socket1.send_string("")
+
+                server2_message = socket2.recv()
+                server2_message = server2_message.decode("utf-8")
+                print(server2_message)
+                socket2.send_string("")
+
+                server3_message = socket3.recv() 
+                server3_message = server3_message.decode("utf-8")
+                print(server3_message)
+                socket3.send_string("")
+
+                server4_message = socket4.recv() 
+                server4_message = server4_message.decode("utf-8")
+                print(server4_message)
+                socket4.send_string("")
+
+                server5_message = socket5.recv() 
+                server5_message = server5_message.decode("utf-8")
+                print(server5_message)
+                socket5.send_string("")
 
                 server6_message = socket6.recv() 
                 server6_message = server6_message.decode("utf-8")
@@ -879,6 +1054,7 @@ def main():
                 server10_message = server10_message.decode("utf-8")
                 print(server10_message)
                 socket10.send_string("")
+>>>>>>> 08486542ef56c5441bbaf5131cc41812132b5c29
 
         elif mode_char == 'dd':
             while True:
