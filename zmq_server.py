@@ -91,21 +91,17 @@ def capture_3D(site, case_path, case_number, server_no, master_ID, sync_par, syn
 
     
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-<<<<<<< HEAD
     time.sleep(10)
     os.system("rsync -av ~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/")
-||||||| merged common ancestors
     time.sleep(2)
     os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
-=======
+
     time.sleep(10)
     os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
->>>>>>> 08486542ef56c5441bbaf5131cc41812132b5c29
 
     process_pass = process.wait()
     
-    size_pass = size_check(case_path + "/" + "Animal_" + str(case_number) 
-                + "_nano_" + server_no + ".mkv")
+    size_pass = size_check(case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv")
 
     if (process_pass == 0) and (size_pass == True):
         camera_pass = True
