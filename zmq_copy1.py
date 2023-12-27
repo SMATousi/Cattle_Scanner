@@ -34,7 +34,7 @@ go_par = True
 
 #sync_par = False
 
-sync_delay = True
+sync_delay = False
 
 base_path = "/home/vigir/Images/"
 
@@ -60,57 +60,44 @@ def size_check(file_path, threshold = 1e6):
 def capture_3D(site, case_path, case_number, server_no, master_ID, sync_par, sync_delay):
     ####
     case_file = open(case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + '.txt', 'w')
-    if True:
+    if sync_par:
 
-        if True:
+        if sync_delay:
 
             if master_ID == nano_ID:
-                # changed exposure to 2500us
-                lab_exposure = 20000
-                field_exposure = 500
-                command = "k4arecorder --external-sync master -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+
+
+                command = "k4arecorder --external-sync master -e 20000 -r 5 -l 1 -d WFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                 os.system("export DISPLAY=:0")
                 time.sleep(2)
             else:
-                if nano_ID == '13' or nano_ID == '15':
-                    command = "k4arecorder --external-sync sub --sync-delay " + str((int(nano_ID[1])) * 160) + " -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
-                    os.system("export DISPLAY=:0")
-
-                elif nano_ID == '20': # we do not want the offset to be 0*160ms
-                    command = "k4arecorder --external-sync sub --sync-delay " + str((10 * 160)) + " -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
-                    os.system("export DISPLAY=:0")
-                
-                else:
-                    command = "k4arecorder --external-sync sub --sync-delay " + str((int(nano_ID[1])) * 160) + " -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
-                    os.system("export DISPLAY=:0")
+                command = "k4arecorder --external-sync sub --sync-delay " + str((int(nano_ID[1])) * 160) + " -e 20000 -r 5 -l 1 -d WFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                os.system("export DISPLAY=:0")
         else:
             if master_ID == nano_ID:
 
 
-                command = "k4arecorder --external-sync master -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                command = "k4arecorder --external-sync master -e 20000 -r 5 -l 1 -d WFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                 os.system("export DISPLAY=:0")
                 time.sleep(2)
             else:
-                command = "k4arecorder --external-sync sub -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                command = "k4arecorder --external-sync sub -e 20000 -r 5 -l 1 -d WFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                 os.system("export DISPLAY=:0")
     else:
-        command = "k4arecorder -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+        command = "k4arecorder -r 5 -l 1 -d WFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
         os.system("export DISPLAY=:0")
         time.sleep(2)
 
 
     
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
-    #time.sleep(10)
-    #os.system("rsync -av ~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/")
-    #time.sleep(2)
-    #os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
+    time.sleep(10)
+    os.system("rsync -av ~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/")
+    time.sleep(2)
+    os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
 
-    #time.sleep(10)
-    #os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
-    rsync_command = ["rsync -av ~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/"]
-    with open("/home/vigir/Desktop/rsync_command.txt", "w") as file1:
-        file1.writelines(rsync_command)
+    time.sleep(10)
+    os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
 
     process_pass = process.wait()
     

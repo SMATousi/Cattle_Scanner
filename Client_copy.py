@@ -113,8 +113,8 @@ def main():
 
 
         if mode_char == 'e':
-            # server1_message = socket1.recv() 
-            # server1_message = server1_message.decode("utf-8")
+            server1_message = socket1.recv() 
+            server1_message = server1_message.decode("utf-8")
             server2_message = socket2.recv()
             server2_message = server2_message.decode("utf-8")
             server3_message = socket3.recv()
@@ -137,8 +137,8 @@ def main():
             msg = ["e"]
 
             
-            # if server1_message == "server 11 Ready":
-            #     socket1.send_string(json.dumps(msg))
+            if server1_message == "server 11 Ready":
+                socket1.send_string(json.dumps(msg))
             if server2_message == "server 12 Ready":
                 socket2.send_string(json.dumps(msg))
             if server3_message == "server 13 Ready":
@@ -185,7 +185,7 @@ def main():
                                 in_use_cameras[i] = int(cam_in)
                 default_master = input(color.GREEN + "Please insert the master camera ID:" + color.END)
                 Synce_option = input(color.GREEN + "Please insert the syncing mode (1/0):" + color.END)
-                if Synce_option == '1':
+                if Synce_option == 1:
                     Synce_option = True
                 else:
                     Synce_option = False
@@ -215,8 +215,8 @@ def main():
                 case_number = int(initial_case_number)
                 while(True):
 
-                    # server1_message = socket1.recv() 
-                    # server1_message = server1_message.decode("utf-8")
+                    server1_message = socket1.recv() 
+                    server1_message = server1_message.decode("utf-8")
                     server2_message = socket2.recv()
                     server2_message = server2_message.decode("utf-8")
                     server3_message = socket3.recv()
@@ -240,7 +240,7 @@ def main():
                     if ret == "r":
                         msg = ["r"]
                         socket_p.send_string(json.dumps(msg))
-                        # socket1.send_string(json.dumps(msg))
+                        socket1.send_string(json.dumps(msg))
                         socket2.send_string(json.dumps(msg))
                         socket3.send_string(json.dumps(msg))
                         socket4.send_string(json.dumps(msg))
@@ -255,8 +255,8 @@ def main():
                         #msg = "c" + " " + site + " " + str(case_number)
                         msg = ["c", site, str(case_number), default_master, Synce_option]
                         print(msg)
-                        # if server1_message == "server 11 Ready":
-                        #     socket1.send_string(json.dumps(msg))
+                        if server1_message == "server 11 Ready":
+                            socket1.send_string(json.dumps(msg))
                         if server2_message == "server 12 Ready":
                             socket2.send_string(json.dumps(msg))
                         if server3_message == "server 13 Ready":
@@ -282,14 +282,14 @@ def main():
                         
 
 
-                        # if server1_message == "server 11 Ready":
+                        if server1_message == "server 11 Ready":
                             
-                        #     server1_message = socket1.recv()
-                        #     server1_message = server1_message.decode("utf-8")
-                        #     camera_state(1, server1_message)
-                        #     #lcd_update(lcd,1,m2xo(server1_message), case_number)                        
-                        #     socket1.send_string("")
-                        #     #print(client_message)
+                            server1_message = socket1.recv()
+                            server1_message = server1_message.decode("utf-8")
+                            camera_state(1, server1_message)
+                            #lcd_update(lcd,1,m2xo(server1_message), case_number)                        
+                            socket1.send_string("")
+                            #print(client_message)
                             
 
                             
@@ -380,9 +380,9 @@ def main():
                         camera_stats = [server1_message, server2_message, server3_message, server4_message, server5_message, server6_message, server7_message, server8_message, server9_message, server10_message]
                         log_writer(site, site_path, case_number, camera_stats)
                     
-                        # if server1_message == "0" and camera_choose[0]:
-                        #     print(color.RED + color.BOLD + "Please fix the camera No." + str(1) + color.END)
-                        if server2_message == "0" and camera_choose[1]:
+                        if server1_message == "0" and camera_choose[0]:
+                            print(color.RED + color.BOLD + "Please fix the camera No." + str(1) + color.END)
+                        elif server2_message == "0" and camera_choose[1]:
                             print(color.RED + color.BOLD + "Please fix the camera No." + str(2) + color.END)
                         elif server3_message == "0" and camera_choose[2]:
                             print(color.RED + color.BOLD + "Please fix the camera No." + str(3) + color.END)
@@ -405,8 +405,8 @@ def main():
                             
             elif cap_mode == "m":
                 while(True):
-                    # server1_message = socket1.recv() 
-                    # server1_message = server1_message.decode("utf-8")
+                    server1_message = socket1.recv() 
+                    server1_message = server1_message.decode("utf-8")
                     server2_message = socket2.recv()
                     server2_message = server2_message.decode("utf-8")
                     server3_message = socket3.recv()
@@ -430,7 +430,7 @@ def main():
                     if case_number == "r":
                         msg = ["r"]
                         socket_p.send_string(json.dumps(msg))
-                        # socket1.send_string(json.dumps(msg))
+                        socket1.send_string(json.dumps(msg))
                         socket2.send_string(json.dumps(msg))
                         socket3.send_string(json.dumps(msg))
                         socket4.send_string(json.dumps(msg))
@@ -448,8 +448,8 @@ def main():
                         msg = ["c", site, str(case_number), default_master, Synce_option]
                         msg = json.dumps(msg)
 
-                        # if server1_message == "server 11 Ready":
-                        #         socket1.send_string(json.dumps(msg))
+                        if server1_message == "server 11 Ready":
+                                socket1.send_string(json.dumps(msg))
                         if server2_message == "server 12 Ready":
                             socket2.send_string(json.dumps(msg))
                         if server3_message == "server 13 Ready":
@@ -472,13 +472,13 @@ def main():
                         os.system("mkdir -p /home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/")
                         socket_p.send_string(msg)
 
-                        # if server1_message == "server 11 Ready":
+                        if server1_message == "server 11 Ready":
                             
-                        #     server1_message = socket1.recv()
-                        #     server1_message = server1_message.decode("utf-8")
-                        #     camera_state(1, server1_message)                        
-                        #     socket1.send_string("")
-                        #     #print(client_message)
+                            server1_message = socket1.recv()
+                            server1_message = server1_message.decode("utf-8")
+                            camera_state(1, server1_message)                        
+                            socket1.send_string("")
+                            #print(client_message)
                             
 
                             
@@ -558,9 +558,9 @@ def main():
                         camera_stats = [server1_message, server2_message, server3_message, server4_message, server5_message, server6_message, server7_message, server8_message, server9_message, server10_message]
                         log_writer(site, site_path, case_number, camera_stats)
                     
-                        # if server1_message == "0" and camera_choose[0]:
-                        #     print(color.RED + color.BOLD + "Please fix the camera No." + str(1) + color.END)
-                        if server2_message == "0" and camera_choose[1]:
+                        if server1_message == "0" and camera_choose[0]:
+                            print(color.RED + color.BOLD + "Please fix the camera No." + str(1) + color.END)
+                        elif server2_message == "0" and camera_choose[1]:
                             print(color.RED + color.BOLD + "Please fix the camera No." + str(2) + color.END)
                         elif server3_message == "0" and camera_choose[2]:
                             print(color.RED + color.BOLD + "Please fix the camera No." + str(3) + color.END)
@@ -592,8 +592,8 @@ def main():
 
             while True:
 
-                # server1_message = socket1.recv() 
-                # server1_message = server1_message.decode("utf-8")
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
                 server2_message = socket2.recv()
                 server2_message = server2_message.decode("utf-8")
                 server3_message = socket3.recv()
@@ -617,7 +617,7 @@ def main():
                 if site == "r":
                     msg = ["r"]
                     socket_p.send_string(json.dumps(msg))
-                    # socket1.send_string(json.dumps(msg))
+                    socket1.send_string(json.dumps(msg))
                     socket2.send_string(json.dumps(msg))
                     socket3.send_string(json.dumps(msg))
                     socket4.send_string(json.dumps(msg))
@@ -631,7 +631,7 @@ def main():
                 case_number = input(color.GREEN + "Please insert the case number:" + color.END)
                 msg = ["s", site, str(case_number)]
                 socket_p.send_string(json.dumps(msg))
-                # socket1.send_string(json.dumps(msg))
+                socket1.send_string(json.dumps(msg))
                 socket2.send_string(json.dumps(msg))
                 socket3.send_string(json.dumps(msg))
                 socket4.send_string(json.dumps(msg))
@@ -642,10 +642,10 @@ def main():
                 socket9.send_string(json.dumps(msg))
                 socket10.send_string(json.dumps(msg))
 
-                # server1_message = socket1.recv() 
-                # server1_message = server1_message.decode("utf-8")
-                # print(server1_message)
-                # socket1.send_string("")
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
+                print(server1_message)
+                socket1.send_string("")
 
                 server2_message = socket2.recv()
                 server2_message = server2_message.decode("utf-8")
@@ -699,8 +699,8 @@ def main():
         elif mode_char == 'w':
             while True:
 
-                # server1_message = socket1.recv() 
-                # server1_message = server1_message.decode("utf-8")
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
                 server2_message = socket2.recv()
                 server2_message = server2_message.decode("utf-8")
                 server3_message = socket3.recv()
@@ -724,7 +724,7 @@ def main():
                 if site == "r":
                     msg = ["r"]
                     socket_p.send_string(json.dumps(msg))
-                    # socket1.send_string(json.dumps(msg))
+                    socket1.send_string(json.dumps(msg))
                     socket2.send_string(json.dumps(msg))
                     socket3.send_string(json.dumps(msg))
                     socket4.send_string(json.dumps(msg))
@@ -740,7 +740,7 @@ def main():
 
                 msg = ["w"]
                 socket_p.send_string(json.dumps(msg))
-                # socket1.send_string(json.dumps(msg))
+                socket1.send_string(json.dumps(msg))
                 socket2.send_string(json.dumps(msg))
                 socket3.send_string(json.dumps(msg))
                 socket4.send_string(json.dumps(msg))
@@ -751,10 +751,10 @@ def main():
                 socket9.send_string(json.dumps(msg))
                 socket10.send_string(json.dumps(msg))
 
-                # server1_message = socket1.recv() 
-                # server1_message = server1_message.decode("utf-8")
-                # print(server1_message)
-                # socket1.send_string("")
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
+                print(server1_message)
+                socket1.send_string("")
 
                 server2_message = socket2.recv()
                 server2_message = server2_message.decode("utf-8")
@@ -803,8 +803,8 @@ def main():
 
                 site = input(color.RED + "NOW WARMING UP...................To end the warming up process: press ENTER" + color.END)
 
-                # server1_message = socket1.recv() 
-                # server1_message = server1_message.decode("utf-8")
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
                 server2_message = socket2.recv()
                 server2_message = server2_message.decode("utf-8")
                 server3_message = socket3.recv()
@@ -826,7 +826,7 @@ def main():
 
                 msg = ["wk"]
                 socket_p.send_string(json.dumps(msg))
-                # socket1.send_string(json.dumps(msg))
+                socket1.send_string(json.dumps(msg))
                 socket2.send_string(json.dumps(msg))
                 socket3.send_string(json.dumps(msg))
                 socket4.send_string(json.dumps(msg))
@@ -837,10 +837,10 @@ def main():
                 socket9.send_string(json.dumps(msg))
                 socket10.send_string(json.dumps(msg))
 
-                # server1_message = socket1.recv() 
-                # server1_message = server1_message.decode("utf-8")
-                # print(server1_message)
-                # socket1.send_string("")
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
+                print(server1_message)
+                socket1.send_string("")
 
                 server2_message = socket2.recv()
                 server2_message = server2_message.decode("utf-8")
@@ -891,8 +891,8 @@ def main():
         elif mode_char == 'dd':
             while True:
 
-                # server1_message = socket1.recv() 
-                # server1_message = server1_message.decode("utf-8")
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
                 server2_message = socket2.recv()
                 server2_message = server2_message.decode("utf-8")
                 server3_message = socket3.recv()
@@ -916,7 +916,7 @@ def main():
                 if site == "r":
                     msg = ["r"]
                     socket_p.send_string(json.dumps(msg))
-                    # socket1.send_string(json.dumps(msg))
+                    socket1.send_string(json.dumps(msg))
                     socket2.send_string(json.dumps(msg))
                     socket3.send_string(json.dumps(msg))
                     socket4.send_string(json.dumps(msg))
@@ -932,7 +932,7 @@ def main():
 
                 msg = ["dd", site]
                 socket_p.send_string(json.dumps(msg))
-                # socket1.send_string(json.dumps(msg))
+                socket1.send_string(json.dumps(msg))
                 socket2.send_string(json.dumps(msg))
                 socket3.send_string(json.dumps(msg))
                 socket4.send_string(json.dumps(msg))
@@ -943,10 +943,10 @@ def main():
                 socket9.send_string(json.dumps(msg))
                 socket10.send_string(json.dumps(msg))
 
-                # server1_message = socket1.recv() 
-                # server1_message = server1_message.decode("utf-8")
-                # print(server1_message)
-                # socket1.send_string("")
+                server1_message = socket1.recv() 
+                server1_message = server1_message.decode("utf-8")
+                print(server1_message)
+                socket1.send_string("")
 
                 server2_message = socket2.recv()
                 server2_message = server2_message.decode("utf-8")
