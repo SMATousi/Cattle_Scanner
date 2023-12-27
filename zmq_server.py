@@ -65,36 +65,36 @@ def capture_3D(site, case_path, case_number, server_no, master_ID, sync_par, syn
         if True:
 
             if master_ID == nano_ID:
-                # changed exposure to 2500us
+
                 lab_exposure = 20000
                 field_exposure = 500
-                command = "k4arecorder --external-sync master -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                command = "k4arecorder --external-sync master -e 500 -r 5 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                 os.system("export DISPLAY=:0")
                 time.sleep(2)
             else:
                 if nano_ID == '13' or nano_ID == '15':
-                    command = "k4arecorder --external-sync sub --sync-delay " + str((int(nano_ID[1])) * 160) + " -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                    command = "k4arecorder --external-sync sub --sync-delay " + str((int(nano_ID[1])) * 160) + " -e 500 -r 5 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                     os.system("export DISPLAY=:0")
 
-                elif nano_ID == '20': # we do not want the offset to be 0*160ms
-                    command = "k4arecorder --external-sync sub --sync-delay " + str((10 * 160)) + " -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                elif nano_ID == '20':
+                    command = "k4arecorder --external-sync sub --sync-delay " + str((10 * 160)) + " -e 500 -r 5 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                     os.system("export DISPLAY=:0")
                 
                 else:
-                    command = "k4arecorder --external-sync sub --sync-delay " + str((int(nano_ID[1])) * 160) + " -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                    command = "k4arecorder --external-sync sub --sync-delay " + str((int(nano_ID[1])) * 160) + " -e 500 -r 5 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                     os.system("export DISPLAY=:0")
         else:
             if master_ID == nano_ID:
 
 
-                command = "k4arecorder --external-sync master -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                command = "k4arecorder --external-sync master -e 500 -r 5 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                 os.system("export DISPLAY=:0")
                 time.sleep(2)
             else:
-                command = "k4arecorder --external-sync sub -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                command = "k4arecorder --external-sync sub -e 500 -r 5 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
                 os.system("export DISPLAY=:0")
     else:
-        command = "k4arecorder -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+        command = "k4arecorder -r 5 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
         os.system("export DISPLAY=:0")
         time.sleep(2)
 
