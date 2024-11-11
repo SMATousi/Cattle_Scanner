@@ -1,0 +1,15 @@
+[Unit]
+Description=ZeroMQ Server
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/vigir/Desktop/zmq_server.py
+Restart=always  # This ensures the server is restarted if it crashes
+RestartSec=3    # Wait 3 seconds before restarting
+User=vigir
+WorkingDirectory=/home/vigir/Desktop
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

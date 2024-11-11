@@ -23,7 +23,7 @@ context = zmq.Context()
 socket = context.socket(zmq.REQ)
 socket_s = context.socket(zmq.SUB) 
 
-IP_addr = "192.168.0.21"
+IP_addr = "10.14.10.21"
 
 socket.connect("tcp://"+IP_addr+":55" + nano_ID)
 
@@ -64,11 +64,21 @@ def capture_3D(site, case_path, case_number, server_no, master_ID, sync_par, syn
 
         if True:
 
+            # In wireless setup, there is no real master! so we ser device 11 to a sub with zero delay
             if master_ID == nano_ID:
+                # Trowbridge indoor - 33330us
                 # changed exposure to 2500us
                 lab_exposure = 20000
                 field_exposure = 500
-                command = "k4arecorder --external-sync master -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                # 2500 @ Southwest center
+                # 33330 @ trowbridge
+                
+                # ORIGINAL
+                # command = "k4arecorder --external-sync master -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                
+                # WIRELESS
+                command = "k4arecorder --external-sync sub --sync-delay 0 -e 2500 -r 30 -l 1 -d NFOV_UNBINNED -c 1080p " + case_path + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"
+                
                 os.system("export DISPLAY=:0")
                 time.sleep(2)
             else:
@@ -108,7 +118,7 @@ def capture_3D(site, case_path, case_number, server_no, master_ID, sync_par, syn
 
     #time.sleep(10)
     #os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/".format(source = "~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv"))
-    rsync_command = ["rsync -av ~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/"]
+    rsync_command = ["rsync -av ~/Images/"+ site + "/" + "Animal_" + str(case_number) + "_nano_" + server_no + ".mkv vigir3d@10.14.10.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/"]
     with open("/home/vigir/Desktop/rsync_command.txt", "w") as file1:
         file1.writelines(rsync_command)
 
@@ -181,7 +191,7 @@ while True:
         site = message[1]
         case_number = message[2]
         site_path = os.path.join(base_path, site)
-        os.system("rsync -av {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/".format(source = site_path + "/" + "Animal_" + str(case_number) + "_nano_" + nano_ID + '.txt'))
+        os.system("rsync -av {source} vigir3d@10.14.10.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/Animal_" + str(case_number) + "/".format(source = site_path + "/" + "Animal_" + str(case_number) + "_nano_" + nano_ID + '.txt'))
         socket.send_string("Done")
         message = socket.recv()
         message = message.decode("utf-8")
@@ -215,7 +225,7 @@ while True:
         site_path = os.path.join(base_path, site)
         files = os.listdir(site_path)
         for obj in files:
-            os.system("rsync -av --remove-source-files {source} vigir3d@192.168.0.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/".format(source = site_path + "/" + str(obj)))
+            os.system("rsync -av --remove-source-files {source} vigir3d@10.14.10.21:/home/vigir3d/Datasets/cattle_scans/" + site + "/".format(source = site_path + "/" + str(obj)))
         socket.send_string("Done")
         message = socket.recv()
         message = message.decode("utf-8")

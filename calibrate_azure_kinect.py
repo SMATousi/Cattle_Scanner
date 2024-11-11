@@ -376,6 +376,7 @@ def load_filter_pcds(data_path,mode):  # returns a list of  pcds
         
         # WRITE THE TRANSFORMATIONS
         fname_tform = "H_0_" + str(i) + ".txt"
+        print(f"file : {file_ids[i]} is {fname_tform}")
         np.savetxt(os.path.join(data_path,fname_tform), current_transform[i])
         rgbdc = o3d.geometry.RGBDImage.create_from_color_and_depth(
             color, depth, depth_trunc=4.0, convert_rgb_to_intensity=False

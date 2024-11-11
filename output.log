@@ -1,0 +1,12 @@
+[2023-08-21 14:46:04.894] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/../include/k4ainternal/matroska_read.h (143): k4a_playback_t_get_context(). Invalid k4a_playback_t 0x3e9ccec0
+[2023-08-21 14:46:04.894] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/record/sdk/playback.cpp (658): Invalid argument to k4a_playback_close(). playback_handle (0x3e9ccec0) is not a valid handle of type k4a_playback_t
+[2023-08-21 14:46:05.955] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/../include/k4ainternal/matroska_read.h (143): k4a_playback_t_get_context(). Invalid k4a_playback_t 0x3e9ccec0
+[2023-08-21 14:46:05.955] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/record/sdk/playback.cpp (658): Invalid argument to k4a_playback_close(). playback_handle (0x3e9ccec0) is not a valid handle of type k4a_playback_t
+[2023-08-21 14:46:07.023] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/../include/k4ainternal/matroska_read.h (143): k4a_playback_t_get_context(). Invalid k4a_playback_t 0x3e9ccec0
+[2023-08-21 14:46:07.024] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/record/sdk/playback.cpp (658): Invalid argument to k4a_playback_close(). playback_handle (0x3e9ccec0) is not a valid handle of type k4a_playback_t
+[2023-08-21 14:46:08.063] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/../include/k4ainternal/matroska_read.h (143): k4a_playback_t_get_context(). Invalid k4a_playback_t 0x3e9ccec0
+[2023-08-21 14:46:08.063] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/record/sdk/playback.cpp (658): Invalid argument to k4a_playback_close(). playback_handle (0x3e9ccec0) is not a valid handle of type k4a_playback_t
+[2023-08-21 14:46:09.129] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/../include/k4ainternal/matroska_read.h (143): k4a_playback_t_get_context(). Invalid k4a_playback_t 0x3e9ccec0
+[2023-08-21 14:46:09.129] [error] [t=364493] /__w/1/s/extern/Azure-Kinect-Sensor-SDK/src/record/sdk/playback.cpp (658): Invalid argument to k4a_playback_close(). playback_handle (0x3e9ccec0) is not a valid handle of type k4a_playback_t
+It took 9.30s to reconstruct mesh.
+Surface area is: 2.4555482171421718e-05

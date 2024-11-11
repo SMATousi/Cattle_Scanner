@@ -162,7 +162,7 @@ def get_teaser_solver(noise_bound):
     return solver
 
 def Rt2T(R,t):
-    T = np.identity(4)d
+    T = np.identity(4)
     T[:3,:3] = R
     T[:3,3] = t
     return T 
@@ -285,6 +285,8 @@ def filter_file_names(file_list, mode="normal"):
                 continue
 
         new_file_list.append(f)
+    print(new_file_list)
+    new_file_list.sort()
 
     return new_file_list
 

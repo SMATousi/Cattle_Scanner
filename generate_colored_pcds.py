@@ -333,7 +333,7 @@ def main(input_path):
         #tforms = load_tforms_teaser()
         mkv_files = [file for file in os.listdir(input_path) if file.endswith('.mkv')]
         file_ids = [file.split('_')[-2] for file in mkv_files]  # Extracting ID numbers
-        print(file) for file in file_ids_
+        #print(file) for file in file_ids_
         # get the pcds for each view
         pcds = [process_file_list_comp_v1(file_id, input_path) for file_id in file_ids]
         

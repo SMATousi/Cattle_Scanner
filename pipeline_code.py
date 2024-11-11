@@ -345,7 +345,7 @@ def process_file_list_comp_v2(file_id, dpath,tform):
         flying_pixel_filter_threshold = 0.1 # 0.1
         #print(flying_pixel_filter_threshold, " -- ", depth_np.max())
 
-    APPLY_FLYING_PIXEL_FILTER = False
+    APPLY_FLYING_PIXEL_FILTER = True
     if APPLY_FLYING_PIXEL_FILTER : 
         result_mask = numba_eliminate_flying_pixels(depth_np.copy(), ws, flying_pixel_filter_threshold)
         depth_np[result_mask > flying_pixel_filter_threshold] = 0
@@ -478,7 +478,9 @@ def main(input_path, tform_path, colored_icp_path=None, write_path=None):
             colored_ICP_transforms =  load_calibration_colored_ICP(colored_icp_path)
             pcds_tformed = apply_colored_ICP_from_calibration(pcds, colored_ICP_transforms)
             ptsdf_tformed = apply_colored_ICP_from_calibration(ptsdf, colored_ICP_transforms)
-
+        else :
+            ptsdf_tformed = ptsdf
+            pcds_tformed = pcds
 
         pcd_all, ptsdf_all = perform_pairwise_alignment(ptsdf_tformed,pcds_tformed)
         #pcd_all = combine_pcds(pcds_tformed)

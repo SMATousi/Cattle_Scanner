@@ -1,0 +1,16 @@
+#include <iostream>
+
+
+int main(){
+
+
+	int guess;
+	std::cout << "Enter the guess: ";
+	std::cin >> guess;
+
+	if(!std::cin) {
+		std::cout << "its not a digit!" << std::endl;
+	}
+
+	return 0;
+}
