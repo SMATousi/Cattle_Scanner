@@ -16,12 +16,12 @@ Usage:
       [--animals A,B,...]   # default: all Animal_* dirs
   --rig points at a dir with session_rig_T*.npy (shared) and/or per-animal A<id>_T*.npy.
 """
-import argparse, csv, glob, os, sys, time
+import argparse, csv, fnmatch, glob, os, sys, time
 import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import open3d as o3d
 from helpers import call_cpp_program
-from recover_extrinsics_roma import AnimalViews, WORLD, VIEWS
+from recover_extrinsics_roma import AnimalViews, WORLD, VIEWS, T_INDEX, recover_animal
 from process_one_animal import (load_sam3, sam3_mask_views, fuse_and_crop, load_rig,
                                 ba_refine, run_poisson_reconstruction, cloudcompare_volume,
                                 add_denoise_args, denoise_params_from_args)
@@ -40,7 +40,26 @@ def has_views(session, animal, n=3):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--session", required=True)
-    ap.add_argument("--rig", required=True, help="dir with session_rig_T*/A<id>_T* (shared rig)")
+    ap.add_argument("--rig", default=None,
+                    help="dir with session_rig_T*/A<id>_T* (shared rig). OMIT to register every "
+                         "animal on its own with RoMa+TEASER -- more expensive (~60 s/animal) and "
+                         "a little less reliable than a rig that has not moved, but it is the only "
+                         "option when no session rig exists, and it gives genuinely per-animal poses")
+    ap.add_argument("--tform-dirname", default="transformation_matrices",
+                    help="per-animal registration output, written to <session>/<animal>/<this>/")
+    ap.add_argument("--pcd-out", default=None,
+                    help="one dir for every animal's cleaned registered cloud "
+                         "(default: <animal>/result/)")
+    ap.add_argument("--mesh-out", default=None,
+                    help="one dir for every animal's mesh (default: <animal>/result/)")
+    ap.add_argument("--exclude", default=None,
+                    help="comma-separated fnmatch patterns to skip, e.g. 'Animal_84*,Animal_test'")
+    ap.add_argument("--prepare-only", action="store_true",
+                    help="extract mkv + SAM3 mask every animal, then stop. Run this before "
+                         "session_consensus.py, which needs the views and masks to already exist")
+    ap.add_argument("--force", action="store_true",
+                    help="rebuild animals whose mesh already exists (default: skip them, so an "
+                         "interrupted batch resumes where it stopped)")
     ap.add_argument("--fusion", choices=["tsdf", "union"], default="tsdf")
     ap.add_argument("--gamma", type=float, default=1.0)
     ap.add_argument("--poisson-depth", type=int, default=10)
@@ -75,14 +94,51 @@ def main():
     else:
         animals = sorted(os.path.basename(d) for d in glob.glob(os.path.join(session, "Animal_*"))
                          if os.path.isdir(d))
+    if args.exclude:
+        pats = [p.strip() for p in args.exclude.split(",") if p.strip()]
+        dropped = [a for a in animals if any(fnmatch.fnmatch(a, p) for p in pats)]
+        animals = [a for a in animals if a not in dropped]
+        print(f"excluded {len(dropped)}: {', '.join(dropped)}", flush=True)
+    pcd_out = args.pcd_out
+    mesh_out = args.mesh_out
+    for d in (pcd_out, mesh_out):
+        if d:
+            os.makedirs(d, exist_ok=True)
     print(f"{len(animals)} animals in {name}", flush=True)
+    print(f"  clouds -> {pcd_out or '<animal>/result/'}", flush=True)
+    print(f"  meshes -> {mesh_out or '<animal>/result/'}", flush=True)
+    print(f"  poses  -> <animal>/{args.tform_dirname}/"
+          f"{'  (registering per animal)' if not args.rig else '  (shared rig: ' + args.rig + ')'}",
+          flush=True)
 
     # --- load models ONCE ---
     print("loading SAM3 (once) ...", flush=True)
     sam = load_sam3()
     matcher = None
-    if args.ba:
-        print("loading RoMa (once, for --ba) ...", flush=True)
+    if args.prepare_only:
+        for k, animal in enumerate(animals):
+            dpath = os.path.join(session, animal)
+            if not os.path.isdir(dpath):
+                continue
+            t0 = time.time()
+            try:
+                if not args.skip_extract and not has_views(session, animal, 1):
+                    print(f"[{k+1}/{len(animals)}] {animal}: no mkv/views, skip", flush=True)
+                    continue
+                if not args.skip_extract:
+                    call_cpp_program(dpath + "/")
+                sam3_mask_views(dpath, animal, args.gamma, processor=sam)
+                n = len(glob.glob(os.path.join(dpath, f"{animal}_nano_*_mask.png")))
+                print(f"[{k+1}/{len(animals)}] {animal}: {n} masked views "
+                      f"({time.time()-t0:.0f}s)", flush=True)
+            except Exception as e:
+                print(f"[{k+1}/{len(animals)}] {animal}: FAILED {type(e).__name__}: {e}", flush=True)
+        print("\nprepare-only done", flush=True)
+        return
+
+    if args.ba or not args.rig:
+        why = "for registration" if not args.rig else "for --ba"
+        print(f"loading RoMa (once, {why}) ...", flush=True)
         from vismatch import get_matcher
         matcher = get_matcher("roma", device="cuda")
 
@@ -97,17 +153,41 @@ def main():
             if not os.path.isdir(dpath):
                 continue
             t0 = time.time()
+            tdir = os.path.join(dpath, args.tform_dirname)
+            out_a = os.path.join(result_root, animal, "result") if result_root \
+                else os.path.join(dpath, "result")
+            pcd_path = os.path.join(pcd_out or out_a, f"{animal}_sam_teaser.ply")
+            mesh_path = os.path.join(mesh_out or out_a, f"{animal}_mesh.ply")
             try:
+                if os.path.exists(mesh_path) and not args.force:
+                    print(f"[{k+1}/{len(animals)}] {animal}: mesh exists, skip (--force to rebuild)",
+                          flush=True); skipped += 1; continue
                 if not args.skip_extract and not has_views(session, animal, 1):
                     print(f"[{k+1}/{len(animals)}] {animal}: no mkv/views, skip"); skipped += 1; continue
                 if not args.skip_extract:
                     call_cpp_program(dpath + "/")
                 sam3_mask_views(dpath, animal, args.gamma, processor=sam)
 
-                tforms = load_rig(args.rig, animal)
+                if args.rig:
+                    tforms = load_rig(args.rig, animal)
+                else:
+                    # reuse a previous run's poses when they are already complete, so an
+                    # interrupted batch does not pay for registration twice
+                    tforms = load_rig(tdir, animal)
+                    if WORLD not in tforms or len(tforms) < len(VIEWS):
+                        tforms, qual = recover_animal(session, animal, matcher, tdir)
+                        if tforms is None:
+                            print(f"[{k+1}/{len(animals)}] {animal}: registration failed "
+                                  f"{qual.get('warnings')}", flush=True); failed += 1; continue
+                        if qual.get("warnings"):
+                            print(f"    reg warnings: {qual['warnings']}", flush=True)
+                        if qual.get("bridged_views"):
+                            print(f"    bridged views (weaker poses): {qual['bridged_views']}",
+                                  flush=True)
+                    else:
+                        print("    reusing existing transformation_matrices", flush=True)
                 if WORLD not in tforms or len(tforms) < 3:
                     print(f"[{k+1}/{len(animals)}] {animal}: rig missing/short, skip"); skipped += 1; continue
-
                 if args.ba:
                     av = AnimalViews(session, animal)
                     try:
@@ -115,16 +195,20 @@ def main():
                     except Exception as e:
                         print(f"    BA skipped ({e})")
 
-                out_a = os.path.join(result_root, animal, "result") if result_root \
-                    else os.path.join(dpath, "result")
-                os.makedirs(out_a, exist_ok=True)
+                # the poses that actually built this animal, stored with the animal --
+                # whether they came from per-animal recovery or from a session rig
+                os.makedirs(tdir, exist_ok=True)
+                aid = animal.replace("Animal_", "")
+                for v, T in tforms.items():
+                    np.save(os.path.join(tdir, f"A{aid}_T{T_INDEX[v]}.npy"), T)
+
+                os.makedirs(os.path.dirname(pcd_path), exist_ok=True)
+                os.makedirs(os.path.dirname(mesh_path), exist_ok=True)
                 cloud, used, n0 = fuse_and_crop(dpath, animal, tforms, method=args.fusion,
                                                 denoise=den)
                 if len(cloud.points) < 500:
                     print(f"[{k+1}/{len(animals)}] {animal}: empty cloud, skip"); skipped += 1; continue
-                pcd_path = os.path.join(out_a, f"{animal}_sam_teaser.ply")
                 o3d.io.write_point_cloud(pcd_path, cloud)
-                mesh_path = os.path.join(out_a, f"{animal}_mesh.ply")
                 if args.tau_confidence > 0 or args.keep_largest:
                     from tau_confidence import poisson_with_confidence
                     poisson_with_confidence(pcd_path, mesh_path, depth=args.poisson_depth,
